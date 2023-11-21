@@ -5,7 +5,7 @@ export class Veiculo{
     private modelo: string;
     private tipo: string;
 
-    //propriedade viculada ao cliente
+    //propriedade de vinculacao ao cliente
     private cliente?: Cliente;
 
     private dataUltimoAluguel: Date;
@@ -57,17 +57,10 @@ export class Veiculo{
             placa: this.placa,
             modelo: this.modelo,
             tipo: this.tipo,
-            cliente: this.cliente ? {
-                nome: this.cliente.getNome(),
-                cpf: this.cliente.getCpf(),
-                telefone: this.cliente.getHabilitacao(),
-                estadoAluguel: this.cliente.getEstadoAluguel()
-            } : undefined,
-
+            cliente: this.cliente?.getPropriedades(),
             dataUltimoAluguel : this.dataUltimoAluguel,
 
             valorDiaria: this.valorDiaria
-
         }
     }
 }

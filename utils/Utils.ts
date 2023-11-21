@@ -1,8 +1,6 @@
 import {Cliente} from '../src/Cliente';
 import { Veiculo } from '../src/Veiculo';
 import { readFileSync, writeFileSync } from 'fs';
-import * as fs from 'fs';
-const rl = require('readline-sync');
 
 export abstract class Utils {
 
@@ -24,13 +22,9 @@ export abstract class Utils {
     }
 
     static lerArquivo(caminho: string) {
-
-        console.log('Teste');
-
         const arquivo = readFileSync(caminho, {
             encoding : 'utf8'
         });
-
         return JSON.parse(arquivo);
     }
 

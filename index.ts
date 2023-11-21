@@ -1,14 +1,16 @@
 import { Locadora } from './src/Locadora';
 import { Veiculo } from './src/Veiculo';
-import { Cliente } from './src/Cliente';
+import { Cliente } from './src/Cliente'; 
 const rl = require('readline-sync');
 
 const loja = new Locadora();
 
-function exibirMenu() : string {
+function exibirMenu(cliente : Cliente) : string {
     console.clear()
     console.log(`
     --------------MENU--------------
+    Bem vindo ${cliente.getNome()}
+
     1. Cadastrar veículo
     2. Alugar veículo
     3. Devolver veículo
@@ -54,16 +56,16 @@ function alugarVeiculo(cliente : Cliente) {
     rl.question();
 }
 
-function devolverVeiculo() {
+function devolverVeiculo(cliente: Cliente) {
     console.clear();
     console.log('------------DEVOLVER VEICULO------------');
     const cpf = rl.question('Digite o cpf do cliente para devolucao: ');
 
     //Lanca execao de veiculo nao encontrado
-    const valorPagamento = loja.devolverVeiculo(cpf);
+    const valorPagamento = loja.devolverVeiculo(cpf,cliente);
 
     console.log('-----------------------------------------------------');
-    console.log(`Valor da pagar: ${valorPagamento.toFixed(2)}`);
+    console.log(`Valor a pagar: ${valorPagamento.toFixed(2)}`);
     rl.question();
 }
 
@@ -85,7 +87,6 @@ function listarVeiculosDisponivel(){
     });
 
     rl.question();
-
 }
 
 function listarVeiculosAlugados() {
@@ -152,21 +153,10 @@ function cadastrarCliente() {
     console.log('---------------CADASTRAR CLIENTE---------------');
     const nome = rl.question('Digite o nome do cliente: ');
     const cpf = rl.question('Digite o cpf do cliente: ');
-
-    //Chama a validacao de cpf da locadora
-    if (loja.validaCpf(cpf)) {
-        console.log('Cliente com cpf já cadastrado!');
-        rl.question();
-        return;
-    }
-
     const telefone = rl.question('Digite o telefone do cliente: ');
     const habilitacao = rl.question('Digite o tipo de habilitacao do cliente: ');
 
-    
-    const cliente = new Cliente(nome, cpf, telefone, habilitacao);
-
-    loja.cadastrarCliente(cliente);
+    loja.cadastrarCliente(nome, cpf, telefone, habilitacao);
 
     console.log('Cliente cadastrado com sucesso!');
     rl.question();
@@ -201,7 +191,7 @@ while (true) {
   
     while (true) {
 
-        entradaUsuario = exibirMenu();
+        entradaUsuario = exibirMenu(cliente);
 
         switch (entradaUsuario) {
             case '1':
@@ -211,7 +201,7 @@ while (true) {
                 alugarVeiculo(cliente);
                 continue;
             case '3':
-                devolverVeiculo();
+                devolverVeiculo(cliente);
                 continue;
             case '4':
                 listarVeiculosDisponivel();

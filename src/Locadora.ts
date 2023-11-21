@@ -29,7 +29,7 @@ export class Locadora{
 
             veiculo.setDataUltimoAluguel(new Date(element.dataUltimoAluguel));
 
-            if (!!element.cliente) {
+            if (element.cliente) {
                 const veiculo_cliente = Locadora.clientes.find(element_cliente => {
                     return element_cliente.getCpf() === element.cliente.cpf;
                 })
@@ -70,7 +70,7 @@ export class Locadora{
 
         //Verifica o estado do cliente
         if (cliente.getEstadoAluguel()) {
-            throw new Error(`O cliente ja esta com um veiculo alugado!`);
+            throw new Error(`O cliente ${cliente.getNome()} de cpf ${cliente.getCpf()} ja esta com um veiculo alugado!`);
         }
 
         //Verifica se o modelo desejado pelo cliente esta disponível
@@ -87,7 +87,7 @@ export class Locadora{
                 veiculo.setCliente(cliente);
                 const data = new Date();
                 veiculo.setDataUltimoAluguel(data);
-                //Tudo certo
+                //Tudo certo!
                 return;
             }
 
@@ -97,7 +97,12 @@ export class Locadora{
         
     }
 
-    devolverVeiculo(cpf: string): number {
+    devolverVeiculo(cpf: string, cliente: Cliente): number {
+        //valida cpf informado com cliente logado
+        if (cliente.getCpf() != cpf) {
+            throw new Error(`Erro ao devolver veiculo - O cpf ${cpf} não corresponde ao cliente logado no sistema!`);
+        }
+
 
         //Recuperar veiculo
         const veiculo = Locadora.veiculos.find(v => {
@@ -106,7 +111,7 @@ export class Locadora{
 
         //Valida veiculo
         if (!veiculo) {
-            throw new Error(`Erro ao devolver veiculo - O cpf ${cpf} não corresponde a nenhum cliente com aluguel ativo`);
+            throw new Error(`Erro ao devolver veiculo - O cpf ${cpf} não corresponde a nenhum cliente com aluguel ativo!`);
         }
 
         //Fazer calculo de custo
@@ -122,8 +127,8 @@ export class Locadora{
     }
 
     excluirVeiculo(placa:string) {
-        const index_v = Locadora.veiculos.findIndex(e => {
-            return e.getPlaca() === placa;
+        const index_v = Locadora.veiculos.findIndex(element => {
+            return element.getPlaca() === placa;
         })
 
         const veiculo = Locadora.veiculos[index_v];
@@ -139,18 +144,18 @@ export class Locadora{
         }
 
         //Remove veiculo
-        Locadora.veiculos = Locadora.veiculos.splice(index_v, 1);
+        Locadora.veiculos.splice(index_v,1);
     }
     
     listarVeiculosDisponivel() : Veiculo[] {
-        return Locadora.veiculos.filter(e => {
-            return !e.getCliente();
+        return Locadora.veiculos.filter(element => {
+            return !element.getCliente();
         })
     }
 
     listarVeiculosAlugados() : Veiculo[] {
-        return Locadora.veiculos.filter(e => {
-            return !!e.getCliente();
+        return Locadora.veiculos.filter(element => {
+            return element.getCliente() instanceof Cliente;
         })
     }
 
@@ -163,18 +168,24 @@ export class Locadora{
 
     //true se existir - false se nao existir
     validaCpf(cpf: string): boolean{
-        const c = Locadora.clientes.find(e => {
-            e.getCpf() === cpf;
+        const cliente = Locadora.clientes.find(e => {
+            return e.getCpf() === cpf;
         })
-        return !!c;
+        return cliente instanceof Cliente;
     }
 
-    cadastrarCliente(cliente: Cliente) {
+    cadastrarCliente(nome: string, cpf: string, telefone: string, habilitacao: string) {
+
+        const cliente_recuperado = Locadora.clientes.find(e => {
+            return e.getCpf() === cpf;
+        })
+        if (cliente_recuperado) {
+            throw new Error('Erro a cadastrar cliente - Um cliente com cpf ${cpf} ja existe!');
+        } 
+        
+        const cliente = new Cliente(nome, cpf, telefone, habilitacao);
         
         Locadora.clientes.push(cliente);
-
-        console.log(Locadora.clientes);
-        rl.question('Olhe a lista de cliente');
     }
 
     efetuarLogin(cpf: string) : Cliente{
@@ -183,7 +194,7 @@ export class Locadora{
         })
 
         console.log(cliente)
-        rl.question('Olhe o cliente recuperado')
+        rl.question('cliente recuperado')
 
         if (!cliente) {
             throw new Error('Erro ao efetuar login - Cliente nao encotrado')
