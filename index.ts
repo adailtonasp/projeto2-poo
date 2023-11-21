@@ -156,8 +156,13 @@ function cadastrarCliente() {
     const telefone = rl.question('Digite o telefone do cliente: ');
     const habilitacao = rl.question('Digite o tipo de habilitacao do cliente: ');
 
-    loja.cadastrarCliente(nome, cpf, telefone, habilitacao);
-
+    try{
+        loja.cadastrarCliente(nome, cpf, telefone, habilitacao);
+    } catch(error){
+        rl.question("Cpf ja cadastrado, cadastre outro cliente. (pressine enter para continuar)");
+        cadastrarCliente();
+    }
+    
     console.log('Cliente cadastrado com sucesso!');
     rl.question();
 }
