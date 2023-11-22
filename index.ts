@@ -36,7 +36,16 @@ function cadastrarVeiculo() {
     const veiculo = new Veiculo(placa, modelo, tipo, valorDiaria);
 
     //Lanca execao de veiculo ja cadastrado
-    loja.cadastrarVeiculo(veiculo);
+    try {
+        console.log("Iniciando cadastro de veiculo!");
+        loja.cadastrarVeiculo(veiculo)
+    } catch (e: any) {
+        console.log(e.message)
+        console.log('Falha no cadastro.')
+        rl.question();
+        return;
+    }
+    
 
     console.log('Veiculo cadastrado com sucesso!');
     rl.question();
@@ -50,7 +59,15 @@ function alugarVeiculo(cliente : Cliente) {
     //Lanca execao de modelo ausente
     //Lanca execao para habilitacao de cliente
     //Lanca execao para o cliente ja esta alugando um veiculo
-    loja.alugarVeiculo(cliente, modelo);
+    try {
+        loja.alugarVeiculo(cliente, modelo);
+    } catch (error: any) {
+        console.log(error.message);
+        console.log('Falha no alguel de veiculo.')
+        rl.question();
+        return;
+    }
+    
 
     console.log('Veiculo alugado com sucesso!');
     rl.question();
@@ -58,15 +75,25 @@ function alugarVeiculo(cliente : Cliente) {
 
 function devolverVeiculo(cliente: Cliente) {
     console.clear();
-    console.log('------------DEVOLVER VEICULO------------');
-    const cpf = rl.question('Digite o cpf do cliente para devolucao: ');
+    let valorPagamento;
+    while (!valorPagamento) {
+        console.log('------------DEVOLVER VEICULO------------');
+        const cpf = rl.question('Digite o cpf do cliente para devolucao: ');
+    
+        //Lanca execao de veiculo nao encontrado
+        try {
+            valorPagamento = loja.devolverVeiculo(cpf, cliente);
+        } catch (error: any) {
+            console.log(error.message);
+            console.log('Falha na devolucao de veiculo.')
+            rl.question();
+            return;
+        }
 
-    //Lanca execao de veiculo nao encontrado
-    const valorPagamento = loja.devolverVeiculo(cpf,cliente);
-
-    console.log('-----------------------------------------------------');
-    console.log(`Valor a pagar: ${valorPagamento.toFixed(2)}`);
-    rl.question();
+        console.log('-----------------------------------------------------');
+        console.log(`Valor a pagar: ${valorPagamento.toFixed(2)}`);
+        rl.question();
+    }
 }
 
 function listarVeiculosDisponivel(){
@@ -117,7 +144,15 @@ function excluirVeiculo() {
 
     //Lanca execao para veiculo nao encontrado
     //Lanca execao para veiculo alugado
-    loja.excluirVeiculo(placa);
+    try {
+        loja.excluirVeiculo(placa);
+    } catch (error: any) {
+        console.log(error.message);
+        console.log("Falha na exclusao do veiculo");
+        rl.question();
+        return;
+    }
+    
 
     console.log('Veiculo excluido com sucesso!');
     rl.question();
@@ -137,14 +172,21 @@ function exibirLogin() : string {
     return r;
 }
 
-function loginCPF(): Cliente {
+function loginCPF(): Cliente | undefined{
     console.clear();
+    let cliente;
     console.log('---------------LOGIN---------------');
     const cpf = rl.question('Digite o cpf do cliente: ');
 
     //Lanca execao de cliente nao encontrado
-    const cliente = loja.efetuarLogin(cpf);
-
+    try {
+        cliente = loja.efetuarLogin(cpf);
+    } catch (error: any) {
+        console.log(error.message);
+        console.log('Falha no login');
+        rl.question;
+    }
+    
     return cliente;
 }
 
@@ -156,33 +198,38 @@ function cadastrarCliente() {
     const telefone = rl.question('Digite o telefone do cliente: ');
     const habilitacao = rl.question('Digite o tipo de habilitacao do cliente: ');
 
-    try{
+    try {
         loja.cadastrarCliente(nome, cpf, telefone, habilitacao);
-    } catch(error){
-        rl.question("Cpf ja cadastrado, cadastre outro cliente. (pressine enter para continuar)");
-        cadastrarCliente();
+    } catch (error: any) {
+        console.log(error.message);
+        console.log('Falha ao cadastrar cliente.');
+        rl.question();
+        return;
     }
-    
+
     console.log('Cliente cadastrado com sucesso!');
     rl.question();
 }
 
 while (true) {
-    let cliente: Cliente;
     let entradaUsuario: string
+    let cliente;
     while (true) {
         
         entradaUsuario = exibirLogin();
 
+
         switch (entradaUsuario) {
             case '1':
                 cliente = loginCPF();
-                break;
+                if (cliente) break;
+                continue;
             case '2':
                 cadastrarCliente();
                 continue;
             case '3':
                 console.clear();
+                loja.salvarDados();
                 console.log('Ate mais!');
                 process.exit();
             default:

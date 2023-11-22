@@ -45,15 +45,6 @@ export class Locadora{
     }
 
     cadastrarVeiculo(veiculo : Veiculo) {
-        
-        // console.log(Locadora.veiculos);
-        // console.log(Locadora.veiculos.find(v => {
-        //     return v.getPlaca() === veiculo.getPlaca();
-        // }))
-            
-        // rl.question('Olhe a lista de veiculo');
-        
-
         // Validação de placa
         if(!Locadora.veiculos.find(v => {
             return v.getPlaca() === veiculo.getPlaca();
@@ -140,7 +131,7 @@ export class Locadora{
 
         //Veiculo alugado
         if (veiculo.getCliente()) {
-            throw new Error(`Erro ao excluir veiculo - O veiculo de placa ${placa} esta alugado para ${veiculo.getCliente()?.getNome()}`);
+            throw new Error(`Erro ao excluir veiculo -  ${placa} esta alugado para ${veiculo.getCliente()?.getNome()}`);
         }
 
         //Remove veiculo
@@ -180,7 +171,7 @@ export class Locadora{
             return e.getCpf() === cpf;
         })
         if (cliente_recuperado) {
-            throw new Error('Erro a cadastrar cliente - Um cliente com cpf ${cpf} ja existe!');
+            throw new Error(`Erro a cadastrar cliente - Um cliente com cpf ${cpf} ja existe!`);
         } 
         
         const cliente = new Cliente(nome, cpf, telefone, habilitacao);
@@ -192,9 +183,6 @@ export class Locadora{
         const cliente = Locadora.clientes.find(c => {
             return c.getCpf() === cpf;
         })
-
-        console.log(cliente)
-        rl.question('cliente recuperado')
 
         if (!cliente) {
             throw new Error('Erro ao efetuar login - Cliente nao encotrado')

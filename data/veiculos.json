@@ -1,1 +1,1 @@
-[{"placa":"123","modelo":"palio","tipo":"carro","cliente":{"nome":"adailton","cpf":"123","telefone":"1","habilitacao":"B","estadoAluguel":true},"dataUltimoAluguel":"2023-11-21T19:10:41.662Z","valorDiaria":"100"},{"placa":"234","modelo":"palio","tipo":"carro","cliente":{"nome":"cliente2","cpf":"234","telefone":"1","habilitacao":"B","estadoAluguel":true},"dataUltimoAluguel":"2023-11-21T19:29:15.365Z","valorDiaria":"100"}]
+[{"placa":"123","modelo":"palio","tipo":"carro","dataUltimoAluguel":"2023-11-22T18:57:07.574Z","valorDiaria":"110"}]

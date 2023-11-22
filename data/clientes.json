@@ -1,1 +1,1 @@
-[{"nome":"adailton","cpf":"123","telefone":"1","habilitacao":"B","estadoAluguel":true},{"nome":"cliente2","cpf":"234","telefone":"1","habilitacao":"B","estadoAluguel":true}]
+[{"nome":"cliente1","cpf":"123","telefone":"99999","habilitacao":"B","estadoAluguel":false},{"nome":"cliente2","cpf":"234","telefone":"9999","habilitacao":"A","estadoAluguel":false}]
